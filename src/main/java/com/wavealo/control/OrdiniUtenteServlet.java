@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "OrdiniUtenteServlet", value = "/ordiniutente")
+@WebServlet(name = "OrdiniUtenteServlet", value = "/ordini")
 public class OrdiniUtenteServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
         HttpSession session = request.getSession();
