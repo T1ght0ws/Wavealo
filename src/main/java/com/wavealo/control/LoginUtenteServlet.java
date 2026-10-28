@@ -25,8 +25,10 @@ public class LoginUtenteServlet extends HttpServlet {
             UtenteDAO utenteDAO = new UtenteDAO();
             Utente utente = utenteDAO.loginUser(email, password);
             if(utente != null) {
+                request.changeSessionId();
                 HttpSession session = request.getSession();
                 session.setAttribute("utente", utente);
+                TokenUtil.rigeneraToken(session);
                 response.sendRedirect(request.getContextPath() + "/catalogo");
             }else{
                 request.setAttribute("errore", "Email o password errati");

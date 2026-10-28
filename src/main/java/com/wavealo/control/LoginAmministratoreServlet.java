@@ -25,8 +25,10 @@ public class LoginAmministratoreServlet extends HttpServlet {
             AmministratoreDAO amministratoreDAO = new AmministratoreDAO();
             Amministratore amministratore = amministratoreDAO.loginAdmin(email, password);
             if(amministratore != null){
+                request.changeSessionId();
                 HttpSession session = request.getSession();
                 session.setAttribute("amministratore", amministratore);
+                TokenUtil.rigeneraToken(session);
                 response.sendRedirect(request.getContextPath() + "/catalogo");
             }else{
                 request.setAttribute("errore", "Email o password errati");
