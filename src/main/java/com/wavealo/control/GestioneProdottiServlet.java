@@ -25,6 +25,7 @@ public class GestioneProdottiServlet extends HttpServlet {
                 ProdottoDAO prodottoDAO = new ProdottoDAO();
                 List<Prodotto> prodotti = prodottoDAO.getAllProdotti();
                 request.setAttribute("prodotti", prodotti);
+                TokenUtil.getToken(request.getSession());
                 request.getRequestDispatcher("/WEB-INF/view/gestioneprodotti.jsp").forward(request, response);
             }catch(Exception e){
                 e.printStackTrace();
@@ -33,6 +34,15 @@ public class GestioneProdottiServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        if(!TokenUtil.isValid(request)){
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
+        Amministratore amministratore = (Amministratore) request.getSession().getAttribute("amministratore");
+        if (amministratore == null) {
+            response.sendRedirect(request.getContextPath() + "/loginAmministratore");
+            return;
+        }
         String action = request.getParameter("action");
 
         try{

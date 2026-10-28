@@ -25,13 +25,22 @@ public class CheckoutServlet extends HttpServlet {
         if(utente == null) {
             response.sendRedirect(request.getContextPath() + "/loginUtente");
         }else{
+            TokenUtil.getToken(request.getSession());
             request.getRequestDispatcher("/WEB-INF/view/checkout.jsp").forward(request, response);
         }
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        if(!TokenUtil.isValid(request)){
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
         HttpSession session = request.getSession();
         Utente utente = (Utente) session.getAttribute("utente");
+        if (utente == null) {
+            response.sendRedirect(request.getContextPath() + "/loginUtente");
+            return;
+        }
         String citta = request.getParameter("citta");
         String cap = request.getParameter("CAP");
         String via = request.getParameter("via");

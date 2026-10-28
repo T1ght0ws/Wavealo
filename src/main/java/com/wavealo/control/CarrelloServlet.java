@@ -17,10 +17,15 @@ import java.util.List;
 @WebServlet(name = "CarrelloServlet", value = "/carrello")
 public class CarrelloServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
+        TokenUtil.getToken(request.getSession());
         request.getRequestDispatcher("/WEB-INF/view/carrello.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
+        if(!TokenUtil.isValid(request)){
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
         List<CartItem> carrello = (List<CartItem>) session.getAttribute("carrello");

@@ -20,6 +20,7 @@ public class CatalogoServlet extends HttpServlet {
             List<Prodotto> prodotti = prodottoDAO.getAllProdotti();
 
             request.setAttribute("prodotti", prodotti);
+            TokenUtil.getToken(request.getSession());
             request.getRequestDispatcher("/WEB-INF/view/catalogo.jsp").forward(request, response);
         } catch (Exception e){
             e.printStackTrace();

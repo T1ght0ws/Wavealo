@@ -25,6 +25,7 @@ public class GestioneOrdiniServlet extends HttpServlet {
                 OrdineDAO ordineDAO = new OrdineDAO();
                 List<Ordine> ordini = ordineDAO.getAllOrdini();
                 request.setAttribute("ordini", ordini);
+                TokenUtil.getToken(request.getSession());
                 request.getRequestDispatcher("/WEB-INF/view/gestioneordini.jsp").forward(request, response);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -33,6 +34,10 @@ public class GestioneOrdiniServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        if(!TokenUtil.isValid(request)){
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return;
+        }
         HttpSession session = request.getSession();
         Amministratore amministratore = (Amministratore) session.getAttribute("amministratore");
         if (amministratore == null) {
